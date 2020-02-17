@@ -69,6 +69,21 @@ try:
 except Exception as e:
     print(format(e))
 
+try:
+    db= pymysql.connect("localhost","root","","LibraryDB")
+    cursor = db.cursor()
+
+    sql2=""" create table booksBorrowed(
+    Id int primary key auto_increment,
+    studentID int not null references users(id) ,
+    bookID int not null references books(id),
+    borroweddate timestamp default current_timestamp)"""
+
+    cursor.execute(sql2)
+
+    db.close()
+except Exception as e:
+    print(format(e))
 
 #Login & Signup Frame
 
@@ -82,6 +97,8 @@ signupFrame.pack(side="left",expand='yes')
 
 #login frame
 lsmMain = LabelFrame(main)
+ussMain = LabelFrame(main)
+
 def login():
     username = loginUserName.get()
     password = loginPassword.get()
@@ -99,17 +116,24 @@ def login():
            for result in results:
                
                if result[2]== password:
-                   lsmMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
-                   lsmMain.lift()
-                   root.pack_forget()
+                   if result[3]== "Library Staff Member":
+                       lsmMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
+                       lsmMain.lift()
+                       root.pack_forget()
+                   else:
+                       ussMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
+                       ussMain.lift()
+                       root.pack_forget()
                    pass1=1
-                   
+           if  len(result)==0:
+               messagebox.showerror("Error","Invalid User Account")
+               pass1==1
+               
            if pass1==0:     
                messagebox.showerror("Error","Invalid Password")    
                
            
-           if  len(result)==0:
-               messagebox.showerror("Error","Invalid User Account")     
+              
           
            
         except Exception as e:
@@ -267,6 +291,7 @@ def back():
     try:
         
         updateButton.destroy()
+        deleteButton.destroy()
     except Exception as e:
         print(format(e))
 
@@ -431,20 +456,66 @@ frame.bind("<Configure>",myfunction)
 
 canvas.bind('<Enter>', enter)
 canvas.bind('<Leave>', leave)
-def update():
-    db= pymysql.connect("localhost","root","","LibraryDB")
-    cursor = db.cursor()
-    sql2="update books set ='"+password+"' where id='"+str(result[0])+"'"
 
+def update(result):
     try:
-        cursor.execute(sql2)
-        db.commit()
+        title= str(titleEntry.get())
+        author= str(authorEntry.get())
+        isbn= int(isbnEntry.get())
+        subject= str(subjectEntry.get())
+        btype= str(typeEntry.get())
+        numberOfCopies= int(numberCopiesEntry.get())
+        acType= str(accountType.get())
+        price= int(priceEntry.get())
+        publisher= str(publisherEntry.get())
+        publishDate= str(publishDateEntry.get())
+        if title and author and isbn and subject and btype and numberOfCopies and acType and price and publisher and publishDate:
+            imageName= str(title+" "+str(isbn))+".jpg"
+            image.save("Images\\"+imageName,format='jpeg')
+        
+            db= pymysql.connect("localhost","root","","LibraryDB")
+            cursor = db.cursor()
+            sql2="update books set  title ='"+title+"', author ='"+author+"' , isbn ='"+str(isbn)+"', subject ='"+subject+"', type ='"+btype+"', numberOfCopies ='"+str(numberOfCopies)+"' ,usageAccountType ='"+acType+"', price ='"+str(price)+"' , publisher ='"+publisher+"', pubdate ='"+str(publishDate)+"', imageName ='"+imageName+"' where id='"+str(result[0])+"'"
+
+            try:
+                cursor.execute(sql2)
+                db.commit()
+                addBookClear()
+            except Exception as e:
+                print(format(e))
+                db.rollback()
+                messagebox.showerror("Error","Book not Updated")
+
+            db.close()
+        else:
+            messagebox.showerror("Error","Check the Input Fields")
+
     except Exception as e:
         print(format(e))
-        messagebox.showerror("Error","Password Not Changed")
-        db.rollback()
-        
-    db.close()
+        messagebox.showerror("Error","Check the Input Fields")
+    
+
+   
+   
+
+def deleteBook(result):
+    try:
+        db= pymysql.connect("localhost","root","","libraryDB")
+        cursor=db.cursor()
+        sql3="delete from books where id = "+str(result[0])
+
+        try:
+            cursor.execute(sql3)
+            db.commit()
+            addBookClear()
+        except Exception as e:
+            print(format(e))
+            db.rollback()
+            messagebox.showerror("Error","Book not deleted")
+    except Exception as e:
+        print(format(e))
+        messagebox.showerror("Error","Book not deleted")
+    
 
 def bookEdit(result):
     db= pymysql.connect("localhost","root","","LibraryDB")
@@ -497,14 +568,15 @@ def bookEdit(result):
         booksUI.pack_forget()
 
         submitButton.destroy()
-        updateButton= Button(bookAddUI,text="Update",command=update)
-        updateButton.grid(row=12, column=1, columnspan=4,sticky=W+E)
+        updateButton= Button(bookAddUI,text="Update",command=lambda:update(result))
+        updateButton.grid(row=12, column=1, columnspan=3,sticky=W+E)
+        deleteButton= Button(bookAddUI, text="Delete",command=lambda:deleteBook(result))
+        deleteButton.grid(row=12, column=4,sticky=W+E)
            
     except Exception as e:
         print(format(e))
         
     db.close()
-    
     
 
 def getExistingBooks():
@@ -528,9 +600,12 @@ def getExistingBooks():
     
     db= pymysql.connect("localhost","root","","LibraryDB")
     cursor = db.cursor()
-    sql="select * from books"
-        
-            
+
+    if not str(searchEntry.get()):
+        sql="select * from books"
+    else:
+        sql= "select * from books where title like '%"+str(searchEntry.get())+"%'"
+      
     try:
         cursor.execute(sql)
         global image2
@@ -624,6 +699,27 @@ def getExistingBooks():
         print(format(e))
         
     db.close()
+
+def searchBook():
+    getExistingBooks()
+    searchEntry.delete(0,END)
+def searchBook1(event):
+    getExistingBooks()
+    searchEntry.delete(0,END)
+
+#books UI LMS
+Button(booksUI, text="Back",command = back).pack(side="left")
+topicLabel = Label(booksUI, text="Existing Books", font=("TIMES NEW ROMAN",30)).pack()
+searchEntry = Entry(booksUI)
+searchEntry.pack()
+searchButton = Button(booksUI, text="Search", command=searchBook)
+searchEntry.bind('<Return>',searchBook1)
+searchButton.pack()
+
+
+
+
+
 
 def existingBooks():
     booksUI.pack(fill='both',expand='yes')
@@ -841,12 +937,15 @@ def delete(result):
         db.close()
     getExistingUsersList()
     
+#users and Staff UI
+
+Label(ussMain, text="My Profile", font=("TIMES NEW ROMAN",30)).pack()
 
 
+userName = loginUserName.get()
+print(userName)
 
-#books UI LMS
-Button(booksUI, text="Back",command = back).pack(side="left")
-topicLabel = Label(booksUI, text="Existing Books", font=("TIMES NEW ROMAN",30)).pack()
+
 
 
 
