@@ -61,7 +61,8 @@ try:
     price int not null,
     publisher char(100) not null,
     pubDate char(10) not null,
-    imageName char(20) default 'default.jpg' not null)"""
+    imageName char(20) default 'default.jpg' not null,
+    Note char(1000) not null  )"""
 
     cursor.execute(sql2)
 
@@ -95,9 +96,222 @@ signupFrame = LabelFrame(root,text="Signup",padx=50,pady=50)
 loginFrame.pack(side="right",expand='yes')
 signupFrame.pack(side="left",expand='yes')
 
+#Books frame for Staff Members and Users
+
+ussMain = LabelFrame(main)
+bookMain = LabelFrame(main)
+
+def enter2(event):
+    canvas2.bind_all("<MouseWheel>",mouse_wheel2)
+def leave2(event):
+    canvas2.unbind_all("<MouseWheel>")
+
+def myfunction2(event):
+    canvas2.configure(scrollregion=canvas2.bbox("all"),width=mainWidth-100,height=mainHeight-100)
+
+def mouse_wheel2(event):
+    if event.num==5 or event.delta==-120:
+        canvas2.yview_scroll(1,"units" )
+    if event.num==4 or event.delta ==120:
+        canvas2.yview_scroll(-1,"units" )
+                        
+myframe2=Frame(ussMain,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
+myframe2.place(x=50,y=90)
+
+
+canvas2=Canvas(myframe2)
+
+
+
+frame2=Frame(canvas2)
+myscrollbar2=Scrollbar(myframe2,orient="vertical",command=canvas2.yview)
+canvas2.configure(yscrollcommand=myscrollbar2.set)
+
+myscrollbar2.pack(side="right",fill="y")
+canvas2.pack(side="left")
+canvas2.create_window((0,0),window=frame2,anchor='nw')
+frame2.bind("<Configure>",myfunction2)
+
+canvas2.bind('<Enter>', enter2)
+canvas2.bind('<Leave>', leave2)
+
+
+def bookDetails(result):
+    ussMain.pack_forget()
+    bookMain.lift()
+    bookMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
+
+    global image3
+    global pic3
+
+    global  bookDetailsLabel1 
+    global  bookDetailsLabel2 
+    global  bookDetailsLabel3 
+    global  bookDetailsLabel4 
+    global  bookDetailsLabel5 
+    global  bookDetailsLabel6 
+    global  bookDetailsLabel7 
+    global  bookDetailsLabel8 
+    global  bookDetailsLabel9 
+    global  bookDetailsLabel10
+    global  bookDetailsLabel11
+
+    bookDetailsLabel1 =Label(bookMain,text=result[1])
+    bookDetailsLabel2 =Label(bookMain,text=result[2])
+    bookDetailsLabel3 =Label(bookMain,text=result[3])
+    bookDetailsLabel4 =Label(bookMain,text=result[4])
+    bookDetailsLabel5 =Label(bookMain,text=result[5])
+    bookDetailsLabel6 =Label(bookMain,text=result[6])
+    bookDetailsLabel7 =Label(bookMain,text=result[7])
+    bookDetailsLabel8 =Label(bookMain,text=result[8])
+    bookDetailsLabel9 =Label(bookMain,text=result[9])
+    bookDetailsLabel10 =Label(bookMain,text=result[10])
+    bookDetailsLabel11 =Label(bookMain,text=result[12])
+    bookDetailsLabel1.grid(row=1, column=1,sticky=W) 
+    bookDetailsLabel2.grid(row=2, column=1,sticky=W)
+    bookDetailsLabel3.grid(row=3, column=1,sticky=W)
+    bookDetailsLabel4.grid(row=4, column=1,sticky=W)
+    bookDetailsLabel5.grid(row=5, column=1,sticky=W)
+    bookDetailsLabel6.grid(row=6, column=1,sticky=W)
+    bookDetailsLabel7.grid(row=7, column=1,sticky=W)
+    bookDetailsLabel8.grid(row=8, column=1,sticky=W)
+    bookDetailsLabel9.grid(row=9, column=1,sticky=W)
+    bookDetailsLabel10.grid(row=10, column=1,sticky=W)
+    bookDetailsLabel11.grid(row=11, column=1,sticky=W)
+    path="images\\"+str(result[11])
+    
+    image3 = Image.open(path)
+    pic3 = ImageTk.PhotoImage(image3)
+    imageLabel=Label(bookMain)
+    imageLabel.configure(image=pic3)
+    imageLabel.grid(row=1, column=3,sticky=W,rowspan=10)
+
+def getExistingBooksUsers():
+    global bookCol11
+    global bookCol22
+    global bookCol33
+    
+    try:
+        bookCol11.destroy()
+        bookCol22.destroy()
+        bookCol33.destroy()
+        
+    except Exception as e:
+        print(format(e))
+
+    bookCol11=LabelFrame(frame2)
+   
+    bookCol22=LabelFrame(frame2)
+   
+    bookCol33=LabelFrame(frame2)
+    
+    db= pymysql.connect("localhost","root","","LibraryDB")
+    cursor = db.cursor()
+
+    if not str(searchEntryUsers.get()):
+        sql="select * from books"
+    else:
+        sql= "select * from books where title like '%"+str(searchEntryUsers.get())+"%'"
+      
+    try:
+        cursor.execute(sql)
+        global image2
+        global pic2
+        results = cursor.fetchall()
+        i=0
+        length = len(results)
+        for result in results:
+            if i%3==0:
+                global image2
+                global pic2
+                itemFrame = LabelFrame(bookCol11)
+                itemFrame.pack()
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel.pack()
+                path="images\\"+str(result[11])
+                image2 = Image.open(path)
+                
+                pic2 = ImageTk.PhotoImage(image2)
+                imageLabel21=Label(itemFrame)
+                imageLabel21.configure(image=pic2)
+                imageLabel21.image=pic2
+                imageLabel21.pack()
+               
+                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor.pack()
+                
+                NameLabel.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                imageLabel21.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                itemFrame.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                labelBookAuthor.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                
+                itemFrame.pack()
+                #itemFrame.grid(row=i//3+1,column=0)
+                
+            elif i%3==1:
+                global image22
+                global pic22
+                itemFrame = LabelFrame(bookCol22)
+                itemFrame.pack()
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel.pack()
+                path="images\\"+str(result[11])
+                image22 = Image.open(path)
+                pic22 = ImageTk.PhotoImage(image22)
+                imageLabel21=Label(itemFrame)
+                imageLabel21.configure(image=pic22)
+                imageLabel21.image=pic22
+                imageLabel21.pack()
+                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor.pack()
+                
+                NameLabel.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                imageLabel21.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                itemFrame.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                labelBookAuthor.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                itemFrame.pack()
+                #itemFrame.grid(row=i//3+1,column=0)
+            else:
+                global image23
+                global pic23
+                
+                itemFrame = LabelFrame(bookCol33)
+                itemFrame.pack()
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel.pack()
+                path="images\\"+str(result[11])
+                image23 = Image.open(path)
+                pic23 = ImageTk.PhotoImage(image23)
+                imageLabel21=Label(itemFrame)
+                imageLabel21.configure(image=pic23)
+                imageLabel21.image=pic23
+                imageLabel21.pack()
+
+                
+                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor.pack()
+                
+                NameLabel.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                imageLabel21.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                itemFrame.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                labelBookAuthor.bind("<Button-1>", lambda e,result=result:bookDetails(result))
+                itemFrame.pack()
+                #itemFrame.grid(row=i//3+1,column=0)
+            i=i+1
+        bookCol11.pack(side="left")
+        bookCol22.pack(side="left")
+        bookCol33.pack(side="left")
+       
+    except Exception as e:
+        print(format(e))
+        
+    db.close()
+
+
+
 #login frame
 lsmMain = LabelFrame(main)
-ussMain = LabelFrame(main)
+
 
 def login():
     username = loginUserName.get()
@@ -123,6 +337,7 @@ def login():
                    else:
                        ussMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
                        ussMain.lift()
+                       getExistingBooksUsers()
                        root.pack_forget()
                    pass1=1
            if  len(result)==0:
@@ -276,6 +491,7 @@ def addBookClear():
     accountType.set("All")
     priceEntry.delete(0,END)
     publisherEntry.delete(0,END)
+    noteEntry.delete(0,END)
 
     global imageLabel
     global image
@@ -330,19 +546,20 @@ def submit():
         price= int(priceEntry.get())
         publisher= str(publisherEntry.get())
         publishDate= str(publishDateEntry.get())
+        note = str(noteEntry.get())
     except Exception as e:
         print(format(e))
         messagebox.showerror("Error","Check the Input Fields")
     
 
    
-    if title and author and isbn and subject and btype and numberOfCopies and acType and price and publisher and publishDate:
+    if title and author and isbn and subject and btype and numberOfCopies and acType and price and publisher and publishDate and note:
         imageName= str(title+" "+str(isbn))+".jpg"
         image.save("Images\\"+imageName,format='jpeg')
 
         db= pymysql.connect("localhost","root","","LibraryDB")
         cursor = db.cursor()
-        sql = "INSERT INTO books(title,author, isbn,subject,type,numberOfCopies,usageAccountType,price,publisher,pubDate,imageName ) VALUES ('"+title+"','"+author+"','"+str(isbn)+"','"+subject+"','"+btype+"','"+str(numberOfCopies)+"','"+acType+"','"+str(price)+"','"+publisher+"','"+publishDate+"','"+ imageName+"')"
+        sql = "INSERT INTO books(title,author, isbn,subject,type,numberOfCopies,usageAccountType,price,publisher,pubDate,imageName, Note ) VALUES ('"+title+"','"+author+"','"+str(isbn)+"','"+subject+"','"+btype+"','"+str(numberOfCopies)+"','"+acType+"','"+str(price)+"','"+publisher+"','"+publishDate+"','"+ imageName+"','"+note+"')"
         
         try:
             cursor.execute(sql)
@@ -376,7 +593,7 @@ Label(bookAddUI,text="Price").grid(row=8, column=0,sticky=W)
 Label(bookAddUI,text="Publisher").grid(row=9, column=0,sticky=W)
 Label(bookAddUI,text="Publication Date").grid(row=10, column=0,sticky=W)
 Label(bookAddUI,text="Image",width=20).grid(row=1, column=3,sticky=W)
-
+Label(bookAddUI,text="Note").grid(row=11, column=0,sticky=W)
 titleEntry=Entry(bookAddUI,width=40)
 titleEntry.grid(row=1, column=1,sticky=W)
 authorEntry=Entry(bookAddUI,width=40)
@@ -389,6 +606,7 @@ typeEntry=Entry(bookAddUI,width=40)
 typeEntry.grid(row=5, column=1,sticky=W)
 numberCopiesEntry=Entry(bookAddUI,width=40)
 numberCopiesEntry.grid(row=6, column=1,sticky=W)
+
 
 accountType=StringVar()
 accountType.set("All")
@@ -414,6 +632,9 @@ image = image.resize((250, 250), Image.ANTIALIAS)
 pic = ImageTk.PhotoImage(image)
 imageLabel=Label(bookAddUI,image=pic)
 imageLabel.grid(row=2,column=3,columnspan=2,rowspan=10)
+
+noteEntry=Entry(bookAddUI,width=40)
+noteEntry.grid(row=11, column=1,sticky=W)
 
 clearButton = Button(bookAddUI, text="Clear", command= addBookClear)
 clearButton.grid(row=12, column=0,sticky=W+E)
@@ -469,18 +690,20 @@ def update(result):
         price= int(priceEntry.get())
         publisher= str(publisherEntry.get())
         publishDate= str(publishDateEntry.get())
-        if title and author and isbn and subject and btype and numberOfCopies and acType and price and publisher and publishDate:
+        note = str(noteEntry.get())
+        if title and author and isbn and subject and btype and numberOfCopies and acType and price and publisher and publishDate and note:
             imageName= str(title+" "+str(isbn))+".jpg"
             image.save("Images\\"+imageName,format='jpeg')
         
             db= pymysql.connect("localhost","root","","LibraryDB")
             cursor = db.cursor()
-            sql2="update books set  title ='"+title+"', author ='"+author+"' , isbn ='"+str(isbn)+"', subject ='"+subject+"', type ='"+btype+"', numberOfCopies ='"+str(numberOfCopies)+"' ,usageAccountType ='"+acType+"', price ='"+str(price)+"' , publisher ='"+publisher+"', pubdate ='"+str(publishDate)+"', imageName ='"+imageName+"' where id='"+str(result[0])+"'"
+            sql2="update books set  title ='"+title+"', author ='"+author+"' , isbn ='"+str(isbn)+"', subject ='"+subject+"', type ='"+btype+"', numberOfCopies ='"+str(numberOfCopies)+"' ,usageAccountType ='"+acType+"', price ='"+str(price)+"' , publisher ='"+publisher+"', pubdate ='"+str(publishDate)+"', imageName ='"+imageName+"',note='"+note+"' where id='"+str(result[0])+"'"
 
             try:
                 cursor.execute(sql2)
                 db.commit()
                 addBookClear()
+                back()
             except Exception as e:
                 print(format(e))
                 db.rollback()
@@ -554,6 +777,8 @@ def bookEdit(result):
 
         publishDateEntry.delete(0,END)
         publishDateEntry.insert(0,result[10])
+
+        noteEntry.insert(0,result[12])
 
         global image
         global pic
@@ -935,19 +1160,60 @@ def delete(result):
             db.rollback()
             messagebox.showerror("Error","User Account not Deleted")
         db.close()
-    getExistingUsersList()
-    
+    getExistingUsersList()  
+
+
 #users and Staff UI
 
-Label(ussMain, text="My Profile", font=("TIMES NEW ROMAN",30)).pack()
 
 
-userName = loginUserName.get()
-print(userName)
+def searchBookUsers():
+    getExistingBooksUsers()
+    searchEntryUsers.delete(0,END)
+def searchBook1Users(event):
+    getExistingBooksUsers()
+    searchEntryUsers.delete(0,END)
 
 
+Label(ussMain, text="Books", font=("TIMES NEW ROMAN",30)).pack()
+searchEntryUsers = Entry(ussMain)
+searchEntryUsers.pack()
+searchButtonUsers = Button(ussMain, text="Search", command=searchBookUsers)
+searchEntryUsers.bind('<Return>',searchBook1Users)
+searchButtonUsers.pack()
+
+def backtobooks():
+    bookDetailsLabel1.grid_forget()
+    bookDetailsLabel2.grid_forget()
+    bookDetailsLabel3.grid_forget()
+    bookDetailsLabel4.grid_forget()
+    bookDetailsLabel5.grid_forget()
+    bookDetailsLabel6.grid_forget()
+    bookDetailsLabel7.grid_forget()
+    bookDetailsLabel8.grid_forget()
+    bookDetailsLabel9.grid_forget()
+    bookDetailsLabel10.grid_forget()
+    bookDetailsLabel11.grid_forget()
+    bookMain.pack_forget()
+    ussMain.lift()
+    ussMain.pack(fill='both', expand='yes', side='left')
+    
 
 
+Label(bookMain, text="Details", font=("TIMES NEW ROMAN",30)).grid(row=0, column=1, columnspan=10)
+Button(bookMain, text="Back", command=backtobooks).grid(row=0,column=0)
+Label(bookMain,text="Title").grid(row=1, column=0,sticky=W)
+Label(bookMain,text="Author").grid(row=2, column=0,sticky=W)
+Label(bookMain,text="ISBN").grid(row=3, column=0,sticky=W)
+Label(bookMain,text="Subject").grid(row=4, column=0,sticky=W)
+Label(bookMain,text="Type").grid(row=5, column=0,sticky=W)
+Label(bookMain,text="Number of Copies").grid(row=6, column=0,sticky=W)
+Label(bookMain,text="Usage Account Type").grid(row=7, column=0,sticky=W)
+Label(bookMain,text="Price").grid(row=8, column=0,sticky=W)
+Label(bookMain,text="Publisher").grid(row=9, column=0,sticky=W)
+Label(bookMain,text="Publication Date").grid(row=10, column=0,sticky=W)
+Label(bookMain,text="Image",width=20).grid(row=1, column=3,sticky=W)
+Label(bookMain,text="Note").grid(row=11, column=0,sticky=W)
 
 
 
