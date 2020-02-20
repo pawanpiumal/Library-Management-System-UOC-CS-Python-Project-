@@ -61,8 +61,8 @@ try:
     price int not null,
     publisher char(100) not null,
     pubDate char(10) not null,
-    imageName char(20) default 'default.jpg' not null,
-    Note char(1000) not null  )"""
+    imageName char(255) default 'default.jpg' not null,
+    Note char(255) not null  )"""
 
     cursor.execute(sql2)
 
@@ -91,8 +91,8 @@ except Exception as e:
 root = LabelFrame(main)
 root.pack(expand='yes',fill='both')
 
-loginFrame = LabelFrame(root ,text="Login",padx=50,pady=100)
-signupFrame = LabelFrame(root,text="Signup",padx=50,pady=50)
+loginFrame = LabelFrame(root ,text="Login",font=('Ubuntu Mono',20),padx=50,pady=100)
+signupFrame = LabelFrame(root,text="Signup",font=('Ubuntu Mono',20),padx=50,pady=50)
 loginFrame.pack(side="right",expand='yes')
 signupFrame.pack(side="left",expand='yes')
 
@@ -107,7 +107,7 @@ def leave2(event):
     canvas2.unbind_all("<MouseWheel>")
 
 def myfunction2(event):
-    canvas2.configure(scrollregion=canvas2.bbox("all"),width=mainWidth-100,height=mainHeight-100)
+    canvas2.configure(scrollregion=canvas2.bbox("all"),width=mainWidth-30,height=mainHeight-100)
 
 def mouse_wheel2(event):
     if event.num==5 or event.delta==-120:
@@ -116,7 +116,7 @@ def mouse_wheel2(event):
         canvas2.yview_scroll(-1,"units" )
                         
 myframe2=Frame(ussMain,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
-myframe2.place(x=50,y=90)
+myframe2.place(x=0,y=90)
 
 
 canvas2=Canvas(myframe2)
@@ -156,17 +156,17 @@ def bookDetails(result):
     global  bookDetailsLabel10
     global  bookDetailsLabel11
 
-    bookDetailsLabel1 =Label(bookMain,text=result[1])
-    bookDetailsLabel2 =Label(bookMain,text=result[2])
-    bookDetailsLabel3 =Label(bookMain,text=result[3])
-    bookDetailsLabel4 =Label(bookMain,text=result[4])
-    bookDetailsLabel5 =Label(bookMain,text=result[5])
-    bookDetailsLabel6 =Label(bookMain,text=result[6])
-    bookDetailsLabel7 =Label(bookMain,text=result[7])
-    bookDetailsLabel8 =Label(bookMain,text=result[8])
-    bookDetailsLabel9 =Label(bookMain,text=result[9])
-    bookDetailsLabel10 =Label(bookMain,text=result[10])
-    bookDetailsLabel11 =Label(bookMain,text=result[12])
+    bookDetailsLabel1 =Label(bookMain,text=result[1],wraplength=250)
+    bookDetailsLabel2 =Label(bookMain,text=result[2],wraplength=250)
+    bookDetailsLabel3 =Label(bookMain,text=result[3],wraplength=250)
+    bookDetailsLabel4 =Label(bookMain,text=result[4],wraplength=250)
+    bookDetailsLabel5 =Label(bookMain,text=result[5],wraplength=250)
+    bookDetailsLabel6 =Label(bookMain,text=result[6],wraplength=250)
+    bookDetailsLabel7 =Label(bookMain,text=result[7],wraplength=250)
+    bookDetailsLabel8 =Label(bookMain,text=result[8],wraplength=250)
+    bookDetailsLabel9 =Label(bookMain,text=result[9],wraplength=250)
+    bookDetailsLabel10 =Label(bookMain,text=result[10],wraplength=250)
+    bookDetailsLabel11 =Label(noteFrame,text=result[12],font=('ubuntu mono',18),wraplength=700)
     bookDetailsLabel1.grid(row=1, column=1,sticky=W) 
     bookDetailsLabel2.grid(row=2, column=1,sticky=W)
     bookDetailsLabel3.grid(row=3, column=1,sticky=W)
@@ -177,14 +177,14 @@ def bookDetails(result):
     bookDetailsLabel8.grid(row=8, column=1,sticky=W)
     bookDetailsLabel9.grid(row=9, column=1,sticky=W)
     bookDetailsLabel10.grid(row=10, column=1,sticky=W)
-    bookDetailsLabel11.grid(row=11, column=1,sticky=W)
+    bookDetailsLabel11.grid(row=12, column=1,padx=30,pady=40)
     path="images\\"+str(result[11])
     
     image3 = Image.open(path)
     pic3 = ImageTk.PhotoImage(image3)
     imageLabel=Label(bookMain)
     imageLabel.configure(image=pic3)
-    imageLabel.grid(row=1, column=3,sticky=W,rowspan=10)
+    imageLabel.grid(row=2, column=3,sticky=W,rowspan=10,padx=(100,0))
 
 def getExistingBooksUsers():
     global bookCol11
@@ -199,11 +199,11 @@ def getExistingBooksUsers():
     except Exception as e:
         print(format(e))
 
-    bookCol11=LabelFrame(frame2)
+    bookCol11=Frame(frame2)
    
-    bookCol22=LabelFrame(frame2)
+    bookCol22=Frame(frame2)
    
-    bookCol33=LabelFrame(frame2)
+    bookCol33=Frame(frame2)
     
     db= pymysql.connect("localhost","root","","LibraryDB")
     cursor = db.cursor()
@@ -226,7 +226,7 @@ def getExistingBooksUsers():
                 global pic2
                 itemFrame = LabelFrame(bookCol11)
                 itemFrame.pack()
-                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12),wraplength=250)
                 NameLabel.pack()
                 path="images\\"+str(result[11])
                 image2 = Image.open(path)
@@ -237,7 +237,7 @@ def getExistingBooksUsers():
                 imageLabel21.image=pic2
                 imageLabel21.pack()
                
-                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor=Label(itemFrame,text=result[2],wraplength=250)
                 labelBookAuthor.pack()
                 
                 NameLabel.bind("<Button-1>", lambda e,result=result:bookDetails(result))
@@ -253,7 +253,7 @@ def getExistingBooksUsers():
                 global pic22
                 itemFrame = LabelFrame(bookCol22)
                 itemFrame.pack()
-                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12),wraplength=250)
                 NameLabel.pack()
                 path="images\\"+str(result[11])
                 image22 = Image.open(path)
@@ -262,7 +262,7 @@ def getExistingBooksUsers():
                 imageLabel21.configure(image=pic22)
                 imageLabel21.image=pic22
                 imageLabel21.pack()
-                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor=Label(itemFrame,text=result[2],wraplength=250)
                 labelBookAuthor.pack()
                 
                 NameLabel.bind("<Button-1>", lambda e,result=result:bookDetails(result))
@@ -277,7 +277,7 @@ def getExistingBooksUsers():
                 
                 itemFrame = LabelFrame(bookCol33)
                 itemFrame.pack()
-                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12),wraplength=250)
                 NameLabel.pack()
                 path="images\\"+str(result[11])
                 image23 = Image.open(path)
@@ -288,7 +288,7 @@ def getExistingBooksUsers():
                 imageLabel21.pack()
 
                 
-                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor=Label(itemFrame,text=result[2],wraplength=250)
                 labelBookAuthor.pack()
                 
                 NameLabel.bind("<Button-1>", lambda e,result=result:bookDetails(result))
@@ -298,9 +298,16 @@ def getExistingBooksUsers():
                 itemFrame.pack()
                 #itemFrame.grid(row=i//3+1,column=0)
             i=i+1
-        bookCol11.pack(side="left")
-        bookCol22.pack(side="left")
-        bookCol33.pack(side="left")
+        
+        #bookCol11.place(x=100,y=100,width=300)
+        #bookCol22.place(x=350,y=200,width=300)
+        #bookCol33.place(x=650,y=300,width=300)
+        #bookCol11.pack(side='left',padx=20)
+        #bookCol22.pack(side='left',padx=20)
+        #bookCol33.pack(side='left',padx=20)
+        bookCol11.grid(row=3,column=0,padx=30,sticky=N)
+        bookCol22.grid(row=3,column=1,padx=30,sticky=N)
+        bookCol33.grid(row=3,column=2,padx=30,sticky=N)
        
     except Exception as e:
         print(format(e))
@@ -367,16 +374,16 @@ def loginClear():
 
     
 
-Label(loginFrame,text="UserName",padx=10).grid(row=0,column=0,sticky=W)
-Label(loginFrame,text="Password",padx=10).grid(row=1,column=0,sticky=W)
+Label(loginFrame,text="UserName",padx=10).grid(row=0,column=0,sticky=W,pady=10)
+Label(loginFrame,text="Password",padx=10).grid(row=1,column=0,sticky=W,pady=(0,10))
 
 emptyCol = Label(loginFrame,text ="  ").grid(row=0,column=1)
 
 
 loginUserName = Entry(loginFrame,)
-loginUserName.grid(row=0,column=2)
+loginUserName.grid(row=0,column=2,pady=10)
 loginPassword = Entry(loginFrame, show="**")
-loginPassword.grid(row=1,column=2)
+loginPassword.grid(row=1,column=2,pady=(0,10))
 
 loginClearButton = Button(loginFrame, text = "Clear", command=loginClear).grid(row=2,column=0,sticky=W+E)
 loginButton = Button(loginFrame, text="Login", command= login).grid(row=2,column=2,sticky=W+E)
@@ -432,30 +439,30 @@ def signupClear():
     signupConfirmPassword.delete(0,END)
     accountType.set("Student")
 
-Label(signupFrame,text="UserName").grid(row=0,column=0,sticky=W)
-Label(signupFrame,text="Password").grid(row=1,column=0,sticky=W)
-Label(signupFrame,text="Confirm-Password").grid(row=2,column=0,sticky=W)
-Label(signupFrame,text="Account Type").grid(row=3,column=0, rowspan=3,sticky=W)
+Label(signupFrame,text="UserName").grid(row=0,column=0,sticky=W,pady=10)
+Label(signupFrame,text="Password").grid(row=1,column=0,sticky=W,pady=(0,10))
+Label(signupFrame,text="Confirm-Password").grid(row=2,column=0,sticky=W,pady=(0,10))
+Label(signupFrame,text="Account Type").grid(row=3,column=0, rowspan=3,sticky=W,pady=(0,10))
 
-emptyCol = Label(signupFrame,text ="  ").grid(row=0,column=1)
+emptyCol = Label(signupFrame,text ="  ").grid(row=0,column=1,pady=(0,10))
 
-signupUserName = Entry(signupFrame,)
-signupUserName.grid(row=0,column=2)
+signupUserName = Entry(signupFrame)
+signupUserName.grid(row=0,column=2,pady=(0,10))
 signupPassword = Entry(signupFrame, show="**")
-signupPassword.grid(row=1,column=2)
+signupPassword.grid(row=1,column=2,pady=(0,10))
 signupConfirmPassword = Entry(signupFrame, show="**")
-signupConfirmPassword.grid(row=2,column=2)
+signupConfirmPassword.grid(row=2,column=2,pady=(0,10))
 
 accountTypeSignUp = StringVar()
 accountTypeSignUp.set("Student")
 
 Radiobutton(signupFrame,text="Student",variable = accountTypeSignUp , value = "Student",anchor=W).grid(row = 3, column=2,sticky=W)
 Radiobutton(signupFrame,text="Staff Member",variable = accountTypeSignUp , value = "Staff Member").grid(row = 4, column=2,sticky=W)
-Radiobutton(signupFrame,text="Library Staff Member",variable = accountTypeSignUp , value = "Library Staff Member").grid(row = 5, column=2,sticky=W)
+Radiobutton(signupFrame,text="Library Staff Member",variable = accountTypeSignUp , value = "Library Staff Member").grid(row = 5, column=2,sticky=W,pady=(0,10))
 
 
-signupButton = Button(signupFrame, text="Signup", command= signup).grid(row=6, column=2, sticky=W+E)
-signupClearButton = Button(signupFrame, text = "Clear", command=signupClear).grid(row=6, column=0, sticky=W+E)
+signupButton = Button(signupFrame, text="Signup", command= signup).grid(row=6, column=2, sticky=W+E,pady=(0,10))
+signupClearButton = Button(signupFrame, text = "Clear", command=signupClear).grid(row=6, column=0, sticky=W+E,pady=(0,10))
 
 #Library Staff Member
 
@@ -513,7 +520,9 @@ def back():
 
     try:
         submitButton= Button(bookAddUI,text="Add New Book",command=submit)
-        submitButton.grid(row=12, column=1, columnspan=4,sticky=W+E)
+        submitButton.grid(row=12, column=1, columnspan=4,sticky=W+E,pady=(20,0))
+        #submitButton= Button(bookAddUI,text="Add New Book",command=submit)
+        #submitButton.grid(row=12, column=1, columnspan=4,sticky=W+E,pady=(20,0))
     except Exception as e:
         print(format(e))
 
@@ -582,30 +591,30 @@ def submit():
 Button(bookAddUI, text="Back",command = back).grid(row=0,column=0)
 topicLabel = Label(bookAddUI, text="Add New Book", font=("TIMES NEW ROMAN",30)).grid(row=0,column=1,columnspan=10,sticky=W+E)
 
-Label(bookAddUI,text="Title").grid(row=1, column=0,sticky=W)
-Label(bookAddUI,text="Author").grid(row=2, column=0,sticky=W)
-Label(bookAddUI,text="ISBN").grid(row=3, column=0,sticky=W)
-Label(bookAddUI,text="Subject").grid(row=4, column=0,sticky=W)
-Label(bookAddUI,text="Type").grid(row=5, column=0,sticky=W)
-Label(bookAddUI,text="Number of Copies").grid(row=6, column=0,sticky=W)
-Label(bookAddUI,text="Usage Account Type").grid(row=7, column=0,sticky=W)
-Label(bookAddUI,text="Price").grid(row=8, column=0,sticky=W)
-Label(bookAddUI,text="Publisher").grid(row=9, column=0,sticky=W)
-Label(bookAddUI,text="Publication Date").grid(row=10, column=0,sticky=W)
-Label(bookAddUI,text="Image",width=20).grid(row=1, column=3,sticky=W)
-Label(bookAddUI,text="Note").grid(row=11, column=0,sticky=W)
+Label(bookAddUI,text="Title").grid(row=1, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Author").grid(row=2, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="ISBN").grid(row=3, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Subject").grid(row=4, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Type").grid(row=5, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Number of Copies").grid(row=6, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Usage Account Type").grid(row=7, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Price").grid(row=8, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Publisher").grid(row=9, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Publication Date").grid(row=10, column=0,sticky=W,padx=(100,30),pady=(20,0))
+Label(bookAddUI,text="Image",width=20).grid(row=1, column=3,sticky=W,padx=(0,30),pady=(20,0))
+Label(bookAddUI,text="Note").grid(row=11, column=0,sticky=W,padx=(100,30),pady=(20,0))
 titleEntry=Entry(bookAddUI,width=40)
-titleEntry.grid(row=1, column=1,sticky=W)
+titleEntry.grid(row=1, column=1,sticky=W,pady=(20,0))
 authorEntry=Entry(bookAddUI,width=40)
-authorEntry.grid(row=2, column=1,sticky=W)
+authorEntry.grid(row=2, column=1,sticky=W,pady=(20,0))
 isbnEntry=Entry(bookAddUI,width=40)
-isbnEntry.grid(row=3, column=1,sticky=W)
+isbnEntry.grid(row=3, column=1,sticky=W,pady=(20,0))
 subjectEntry=Entry(bookAddUI,width=40)
-subjectEntry.grid(row=4, column=1,sticky=W)
+subjectEntry.grid(row=4, column=1,sticky=W,pady=(20,0))
 typeEntry=Entry(bookAddUI,width=40)
-typeEntry.grid(row=5, column=1,sticky=W)
+typeEntry.grid(row=5, column=1,sticky=W,pady=(20,0))
 numberCopiesEntry=Entry(bookAddUI,width=40)
-numberCopiesEntry.grid(row=6, column=1,sticky=W)
+numberCopiesEntry.grid(row=6, column=1,sticky=W,pady=(20,0))
 
 
 accountType=StringVar()
@@ -613,34 +622,34 @@ accountType.set("All")
 accountTypeValues=[ "Student","Staff Member","All"]
 accountTypeMenu = OptionMenu(bookAddUI, accountType,*accountTypeValues)
 accountTypeMenu.config(width=30)
-accountTypeMenu.grid(row=7,column=1,sticky=W+E)
+accountTypeMenu.grid(row=7,column=1,sticky=W+E,pady=(20,0))
 
 priceEntry=Entry(bookAddUI,width=40)
-priceEntry.grid(row=8, column=1,sticky=W)
+priceEntry.grid(row=8, column=1,sticky=W,pady=(20,0))
 
 publisherEntry=Entry(bookAddUI,width=40)
-publisherEntry.grid(row=9, column=1,sticky=W)
+publisherEntry.grid(row=9, column=1,sticky=W,pady=(20,0))
 
 publishDateEntry = DateEntry(bookAddUI, width=35)
-publishDateEntry.grid(row=10,column=1,sticky=W+E)
+publishDateEntry.grid(row=10,column=1,sticky=W+E,pady=(20,0))
 
 imageOpenButton = Button(bookAddUI, text="Set Image", command=image,width=30)
-imageOpenButton.grid(row=1, column=4,sticky=W+E)
+imageOpenButton.grid(row=1, column=4,sticky=W+E,pady=(20,0))
 
 image = Image.open(r"images\default.jpg")
 image = image.resize((250, 250), Image.ANTIALIAS)
 pic = ImageTk.PhotoImage(image)
 imageLabel=Label(bookAddUI,image=pic)
-imageLabel.grid(row=2,column=3,columnspan=2,rowspan=10)
+imageLabel.grid(row=1,column=3,columnspan=2,rowspan=10)
 
 noteEntry=Entry(bookAddUI,width=40)
-noteEntry.grid(row=11, column=1,sticky=W)
+noteEntry.grid(row=11, column=1,sticky=W,pady=(20,0))
 
 clearButton = Button(bookAddUI, text="Clear", command= addBookClear)
-clearButton.grid(row=12, column=0,sticky=W+E)
+clearButton.grid(row=12, column=0,sticky=W+E,pady=(20,0),padx=(100,5))
 
 submitButton= Button(bookAddUI,text="Add New Book",command=submit)
-submitButton.grid(row=12, column=1, columnspan=4,sticky=W+E)
+submitButton.grid(row=12, column=1, columnspan=4,sticky=W+E,pady=(20,0))
 
 
 booksUI = LabelFrame(main)
@@ -651,7 +660,7 @@ def leave(event):
     canvas.unbind_all("<MouseWheel>")
 
 def myfunction(event):
-    canvas.configure(scrollregion=canvas.bbox("all"),width=mainWidth-100,height=mainHeight-100)
+    canvas.configure(scrollregion=canvas.bbox("all"),width=mainWidth-30,height=mainHeight-100)
 
 def mouse_wheel(event):
     if event.num==5 or event.delta==-120:
@@ -660,7 +669,7 @@ def mouse_wheel(event):
         canvas.yview_scroll(-1,"units" )
                         
 myframe=Frame(booksUI,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
-myframe.place(x=50,y=90)
+myframe.place(x=0,y=90)
 
 canvas=Canvas(myframe)
 
@@ -722,22 +731,25 @@ def update(result):
    
 
 def deleteBook(result):
-    try:
-        db= pymysql.connect("localhost","root","","libraryDB")
-        cursor=db.cursor()
-        sql3="delete from books where id = "+str(result[0])
-
+    
+    con = messagebox.askyesnocancel("CONFIRM","Do you want to delete this book?")
+    if con:
         try:
-            cursor.execute(sql3)
-            db.commit()
-            addBookClear()
+            db= pymysql.connect("localhost","root","","libraryDB")
+            cursor=db.cursor()
+            sql3="delete from books where id = "+str(result[0])
+
+            try:
+                cursor.execute(sql3)
+                db.commit()
+                addBookClear()
+            except Exception as e:
+                print(format(e))
+                db.rollback()
+                messagebox.showerror("Error","Book not deleted")
         except Exception as e:
             print(format(e))
-            db.rollback()
             messagebox.showerror("Error","Book not deleted")
-    except Exception as e:
-        print(format(e))
-        messagebox.showerror("Error","Book not deleted")
     
 
 def bookEdit(result):
@@ -794,9 +806,9 @@ def bookEdit(result):
 
         submitButton.destroy()
         updateButton= Button(bookAddUI,text="Update",command=lambda:update(result))
-        updateButton.grid(row=12, column=1, columnspan=3,sticky=W+E)
+        updateButton.grid(row=12, column=1, columnspan=3,sticky=W+E,pady=(20,0))
         deleteButton= Button(bookAddUI, text="Delete",command=lambda:deleteBook(result))
-        deleteButton.grid(row=12, column=4,sticky=W+E)
+        deleteButton.grid(row=12, column=4,sticky=W+E,pady=(20,0),padx=(5,0))
            
     except Exception as e:
         print(format(e))
@@ -817,11 +829,11 @@ def getExistingBooks():
     except Exception as e:
         print(format(e))
 
-    bookCol1=LabelFrame(frame)
+    bookCol1=Frame(frame)
    
-    bookCol2=LabelFrame(frame)
+    bookCol2=Frame(frame)
    
-    bookCol3=LabelFrame(frame)
+    bookCol3=Frame(frame)
     
     db= pymysql.connect("localhost","root","","LibraryDB")
     cursor = db.cursor()
@@ -844,7 +856,7 @@ def getExistingBooks():
                 global pic2
                 itemFrame = LabelFrame(bookCol1)
                 itemFrame.pack()
-                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12),wraplength=250)
                 NameLabel.pack()
                 path="images\\"+str(result[11])
                 image2 = Image.open(path)
@@ -855,7 +867,7 @@ def getExistingBooks():
                 imageLabel21.image=pic2
                 imageLabel21.pack()
                
-                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor=Label(itemFrame,text=result[2],wraplength=250)
                 labelBookAuthor.pack()
                 
                 NameLabel.bind("<Button-1>", lambda e,result=result:bookEdit(result))
@@ -871,7 +883,7 @@ def getExistingBooks():
                 global pic22
                 itemFrame = LabelFrame(bookCol2)
                 itemFrame.pack()
-                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12),wraplength=250)
                 NameLabel.pack()
                 path="images\\"+str(result[11])
                 image22 = Image.open(path)
@@ -880,7 +892,7 @@ def getExistingBooks():
                 imageLabel21.configure(image=pic22)
                 imageLabel21.image=pic22
                 imageLabel21.pack()
-                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor=Label(itemFrame,text=result[2],wraplength=250)
                 labelBookAuthor.pack()
                 
                 NameLabel.bind("<Button-1>", lambda e,result=result:bookEdit(result))
@@ -895,7 +907,7 @@ def getExistingBooks():
                 
                 itemFrame = LabelFrame(bookCol3)
                 itemFrame.pack()
-                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12))
+                NameLabel = Label(itemFrame, text=result[1], font=("TIMES NEW ROMAN",12),wraplength=250)
                 NameLabel.pack()
                 path="images\\"+str(result[11])
                 image23 = Image.open(path)
@@ -906,7 +918,7 @@ def getExistingBooks():
                 imageLabel21.pack()
 
                 
-                labelBookAuthor=Label(itemFrame,text=result[2])
+                labelBookAuthor=Label(itemFrame,text=result[2],wraplength=250)
                 labelBookAuthor.pack()
                 
                 NameLabel.bind("<Button-1>", lambda e,result=result:bookEdit(result))
@@ -916,9 +928,12 @@ def getExistingBooks():
                 itemFrame.pack()
                 #itemFrame.grid(row=i//3+1,column=0)
             i=i+1
-        bookCol1.pack(side="left")
-        bookCol2.pack(side="left")
-        bookCol3.pack(side="left")
+        #bookCol1.pack(side="left")
+        #bookCol2.pack(side="left")
+        #bookCol3.pack(side="left")
+        bookCol1.grid(row=3,column=0,padx=30,sticky=N)
+        bookCol2.grid(row=3,column=1,padx=30,sticky=N)
+        bookCol3.grid(row=3,column=2,padx=30,sticky=N)
        
     except Exception as e:
         print(format(e))
@@ -933,13 +948,14 @@ def searchBook1(event):
     searchEntry.delete(0,END)
 
 #books UI LMS
-Button(booksUI, text="Back",command = back).pack(side="left")
-topicLabel = Label(booksUI, text="Existing Books", font=("TIMES NEW ROMAN",30)).pack()
+Button(booksUI, text="Back",command = back).place(x=50, y=30)
 searchEntry = Entry(booksUI)
-searchEntry.pack()
-searchButton = Button(booksUI, text="Search", command=searchBook)
+topicLabel = Label(booksUI, text="Existing Books", font=("TIMES NEW ROMAN",30)).place(x=375, y=10)
+searchEntry = Entry(booksUI)
+searchEntry.place( x=325, y=60,width=300)
+searchButton = Button(booksUI, text="Search", width=10,command=searchBook)
 searchEntry.bind('<Return>',searchBook1)
-searchButton.pack()
+searchButton.place(x=645, y=57)
 
 
 
@@ -960,7 +976,7 @@ def leave1(event):
     canvas1.unbind_all("<MouseWheel>")
 
 def myfunction1(event):
-    canvas1.configure(scrollregion=canvas1.bbox("all"),width=mainWidth-100,height=mainHeight-100)
+    canvas1.configure(scrollregion=canvas1.bbox("all"),width=mainWidth-30,height=mainHeight-100)
 
 def mouse_wheel1(event):
     if event.num==5 or event.delta==-120:
@@ -969,7 +985,7 @@ def mouse_wheel1(event):
         canvas1.yview_scroll(-1,"units" )
                         
 myframe1=Frame(usersUI,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
-myframe1.place(x=50,y=90)
+myframe1.place(x=0,y=90)
 
 canvas1=Canvas(myframe1)
 
@@ -987,6 +1003,8 @@ frame1.bind("<Configure>",myfunction1)
 canvas1.bind('<Enter>', enter1)
 canvas1.bind('<Leave>', leave1)
 
+global searchUsersEntry
+
 def getExistingUsersList():
     global frameCol1
     global frameCol2
@@ -1000,24 +1018,29 @@ def getExistingUsersList():
     except Exception as e:
         print(format(e))
 
-    frameCol1=LabelFrame(frame1)
+    frameCol1=Frame(frame1)
     Label(frameCol1, text="ID", font=("TIMES NEW ROMAN",12)).grid(row=0,column=0)
     Label(frameCol1, text="User Name", font=("TIMES NEW ROMAN",12)).grid(row=0,column=1)
     Label(frameCol1, text="Action", font=("TIMES NEW ROMAN",12)).grid(row=0,column=2,columnspan=2)
    
-    frameCol2=LabelFrame(frame1)
+    frameCol2=Frame(frame1)
     Label(frameCol2, text="ID", font=("TIMES NEW ROMAN",12)).grid(row=0,column=0)
     Label(frameCol2, text="User Name", font=("TIMES NEW ROMAN",12)).grid(row=0,column=1)
     Label(frameCol2, text="Action", font=("TIMES NEW ROMAN",12)).grid(row=0,column=2,columnspan=2)
     
-    frameCol3=LabelFrame(frame1)
+    frameCol3=Frame(frame1)
     Label(frameCol3, text="ID", font=("TIMES NEW ROMAN",12)).grid(row=0,column=0)
     Label(frameCol3, text="User Name", font=("TIMES NEW ROMAN",12)).grid(row=0,column=1)
     Label(frameCol3, text="Action", font=("TIMES NEW ROMAN",12)).grid(row=0,column=2,columnspan=2)
         
     db= pymysql.connect("localhost","root","","LibraryDB")
     cursor = db.cursor()
-    sql="select * from users"
+
+    
+    if not str(searchUsersEntry.get()):
+        sql="select * from users"
+    else:
+        sql="select * from users where username like '%"+str(searchUsersEntry.get())+"%'"
         
             
     try:
@@ -1030,7 +1053,7 @@ def getExistingUsersList():
             if i%3==0:
                 
                 labelID=Label(frameCol1,text=result[0])
-                labelName = Label(frameCol1,text=result[1])
+                labelName = Label(frameCol1,text=result[1],wraplength=250)
                 labelPassword = Label(frameCol1, text="Change",fg="blue")
                 labelDelete = Label(frameCol1, text="Delete",fg="red")
                 labelPassword.bind("<Button-1>", lambda e,result=result:click(result))
@@ -1041,7 +1064,7 @@ def getExistingUsersList():
                 labelDelete.grid(row=i//3+1,column=3)
             elif i%3==1:
                 labelID=Label(frameCol2,text=result[0])
-                labelName = Label(frameCol2,text=result[1])
+                labelName = Label(frameCol2,text=result[1],wraplength=250)
                 labelPassword = Label(frameCol2, text="Change",fg="blue")
                 labelDelete = Label(frameCol2, text="Delete",fg="red")
                 labelPassword.bind("<Button-1>", lambda e,result=result:click(result))
@@ -1052,7 +1075,7 @@ def getExistingUsersList():
                 labelDelete.grid(row=i//3+1,column=3)
             else:
                 labelID=Label(frameCol3,text=result[0])
-                labelName = Label(frameCol3,text=result[1])
+                labelName = Label(frameCol3,text=result[1],wraplength=250)
                 labelPassword = Label(frameCol3, text="Change",fg="blue")
                 labelDelete = Label(frameCol3, text="Delete",fg="red")
                 labelPassword.bind("<Button-1>", lambda e,result=result:click(result))
@@ -1062,9 +1085,9 @@ def getExistingUsersList():
                 labelPassword.grid(row=i//3+1,column=2)
                 labelDelete.grid(row=i//3+1,column=3)
             i=i+1
-        frameCol1.pack(side="left")
-        frameCol2.pack(side="left")
-        frameCol3.pack(side="left")
+        frameCol1.grid(row=3,column=0,padx=60,sticky=N)
+        frameCol2.grid(row=3,column=1,padx=60,sticky=N)
+        frameCol3.grid(row=3,column=2,padx=60,sticky=N)
     except Exception as e:
         print(format(e))
         print("error")
@@ -1078,9 +1101,9 @@ def users():
     lsmMain.pack_forget()
 
 
-addNewBookButton = Button(lsmMain, text="Add New Book",width=35,height=15, command=newBook)
-existingBooksButton = Button(lsmMain, text="Existing Books",width=35,height=15, command=existingBooks)
-existingUsersButton = Button(lsmMain, text="Users",width=35,height=15, command = users)
+addNewBookButton = Button(lsmMain, text="Add New Book",font=('ubuntu mono',10),width=35,height=15, command=newBook)
+existingBooksButton = Button(lsmMain, text="Existing Books",font=('ubuntu mono',10),width=35,height=15, command=existingBooks)
+existingUsersButton = Button(lsmMain, text="Users",width=35,font=('ubuntu mono',10),height=15, command = users)
 
 addNewBookButton.place(x=120,rely=0.3)
 existingBooksButton.place(x=385,rely=0.3)
@@ -1092,8 +1115,21 @@ existingUsersButton.place(x=650,rely=0.3)
 
 #Existing Users Info LSM Panel
 
-Button(usersUI, text="Back",command = back).pack(side='left')
-topicLabel = Label(usersUI, text="Existing Users", font=("TIMES NEW ROMAN",30)).pack()
+Button(usersUI, text="Back",command = back).place(x=50, y=30)
+topicLabel = Label(usersUI, text="Existing Users", font=("TIMES NEW ROMAN",30)). place(x=375, y=10)
+
+def searchUser():
+    getExistingUsersList()
+    searchUsersEntry.delete(0,END)
+def searchUser1(event):
+    getExistingUsersList()
+    searchUsersEntry.delete(0,END)
+
+searchUsersEntry = Entry(usersUI)
+searchUsersEntry.place( x=325, y=60,width=300)
+searchUsersButton = Button(usersUI, text="Search", width=10,command=searchUser)
+searchUsersEntry.bind('<Return>',searchUser1)
+searchUsersButton.place(x=645, y=57)
 
 
 
@@ -1175,12 +1211,15 @@ def searchBook1Users(event):
     searchEntryUsers.delete(0,END)
 
 
-Label(ussMain, text="Books", font=("TIMES NEW ROMAN",30)).pack()
+Label(ussMain, text="Books", font=("TIMES NEW ROMAN",30)).place(x=450, y=10)
+#Label(ussMain, text="Books", font=("TIMES NEW ROMAN",30)).pack()
 searchEntryUsers = Entry(ussMain)
-searchEntryUsers.pack()
-searchButtonUsers = Button(ussMain, text="Search", command=searchBookUsers)
+searchEntryUsers.place( x=325, y=60,width=300)
+#searchEntryUsers.pack()
+searchButtonUsers = Button(ussMain, text="Search", width=10,command=searchBookUsers)
 searchEntryUsers.bind('<Return>',searchBook1Users)
-searchButtonUsers.pack()
+searchButtonUsers.place(x=645, y=57)
+#searchButtonUsers.pack()
 
 def backtobooks():
     bookDetailsLabel1.grid_forget()
@@ -1200,20 +1239,21 @@ def backtobooks():
     
 
 
-Label(bookMain, text="Details", font=("TIMES NEW ROMAN",30)).grid(row=0, column=1, columnspan=10)
+Label(bookMain, text="Details", font=("TIMES NEW ROMAN",30)).grid(row=0, column=1)
 Button(bookMain, text="Back", command=backtobooks).grid(row=0,column=0)
-Label(bookMain,text="Title").grid(row=1, column=0,sticky=W)
-Label(bookMain,text="Author").grid(row=2, column=0,sticky=W)
-Label(bookMain,text="ISBN").grid(row=3, column=0,sticky=W)
-Label(bookMain,text="Subject").grid(row=4, column=0,sticky=W)
-Label(bookMain,text="Type").grid(row=5, column=0,sticky=W)
-Label(bookMain,text="Number of Copies").grid(row=6, column=0,sticky=W)
-Label(bookMain,text="Usage Account Type").grid(row=7, column=0,sticky=W)
-Label(bookMain,text="Price").grid(row=8, column=0,sticky=W)
-Label(bookMain,text="Publisher").grid(row=9, column=0,sticky=W)
-Label(bookMain,text="Publication Date").grid(row=10, column=0,sticky=W)
-Label(bookMain,text="Image",width=20).grid(row=1, column=3,sticky=W)
-Label(bookMain,text="Note").grid(row=11, column=0,sticky=W)
+Label(bookMain,text="Title")                .grid(row=1, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Author")               .grid(row=2, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="ISBN")                 .grid(row=3, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Subject")              .grid(row=4, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Type")                 .grid(row=5, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Number of Copies")     .grid(row=6, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Usage Account Type")   .grid(row=7, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Price")                .grid(row=8, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Publisher")            .grid(row=9, column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Publication Date")     .grid(row=10,column=0,sticky=W,padx=(100,30),pady=(10,0))
+Label(bookMain,text="Image",width=20)       .grid(row=1, column=3,sticky=W,padx=(100,30),pady=(10,0))
+noteFrame = LabelFrame(bookMain,text="Note",font=('Ubuntu mono',20))
+noteFrame.grid(row=12,column=0,sticky=N+E+S+W,padx=100,columnspan=10,pady=(10,0))
 
 
 
