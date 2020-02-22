@@ -186,7 +186,7 @@ def bookDetails(result):
     imageLabel.configure(image=pic3)
     imageLabel.grid(row=2, column=3,sticky=W,rowspan=10,padx=(100,0))
 
-def getExistingBooksUsers():
+def getExistingBooksUsers(userType):
     global bookCol11
     global bookCol22
     global bookCol33
@@ -209,7 +209,7 @@ def getExistingBooksUsers():
     cursor = db.cursor()
 
     if not str(searchEntryUsers.get()):
-        sql="select * from books"
+        sql="select * from books where usageAccountType = 'All' or usageAccountType = '"+userType+"'"
     else:
         sql= "select * from books where title like '%"+str(searchEntryUsers.get())+"%'"
       
@@ -344,7 +344,7 @@ def login():
                    else:
                        ussMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
                        ussMain.lift()
-                       getExistingBooksUsers()
+                       getExistingBooksUsers(result[3])
                        root.pack_forget()
                    pass1=1
            if  len(result)==0:
