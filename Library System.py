@@ -208,6 +208,7 @@ def getExistingBooksUsers(userType):
     db= pymysql.connect("localhost","root","","LibraryDB")
     cursor = db.cursor()
 
+        
     if not str(searchEntryUsers.get()):
         sql="select * from books where usageAccountType = 'All' or usageAccountType = '"+userType+"'"
     else:
@@ -320,6 +321,7 @@ def getExistingBooksUsers(userType):
 lsmMain = LabelFrame(main)
 
 
+
 def login():
     username = loginUserName.get()
     password = loginPassword.get()
@@ -337,6 +339,9 @@ def login():
            for result in results:
                
                if result[2]== password:
+                   global userTpeForBooks
+                   userTpeForBooks=result[3]
+                   print(userTpeForBooks)
                    if result[3]== "Library Staff Member":
                        lsmMain.pack(fill=BOTH ,expand=TRUE, side=LEFT)
                        lsmMain.lift()
@@ -404,22 +409,35 @@ def signup():
         if password == confirm:
             db= pymysql.connect("localhost","root","","LibraryDB")
             cursor = db.cursor()
-            sql = "INSERT INTO users(username,password,accountType  ) VALUES ('"+username+"','"+password+"','"+acType+"' )"
-            
+            sql_check = "select * from users where username='"+username+"'"
             try:
-               cursor.execute(sql)
-               db.commit()
-               signupClear()
+                cursor.execute(sql_check)
+                results=cursor.fetchall()
+                if(len(results)>=1):
+                    messagebox.showerror( title="Error", message="User Name Already Exists")
+                    signupClear()
+                else:
+
+                    sql = "INSERT INTO users(username,password,accountType  ) VALUES ('"+username+"','"+password+"','"+acType+"' )"
+                    
+                    try:
+                        cursor.execute(sql)
+                        db.commit()
+                        signupClear()
+                        loginUserName.delete(0,END)
+                        loginUserName.insert(0,username)
+                        loginPassword.delete(0,END)
+                        loginPassword.insert(0,password)
+                    except Exception as e:
+                        db.rollback()
+                        print(format(e))
+                        messagebox.showerror( title="Error", message="Account not Added")
             except Exception as e:
-               db.rollback()
-               print(format(e))
-               messagebox.showerror( title="Error", message="Account not Added")
+                print(format(e))
+
 
             db.close()
-            loginUserName.delete(0,END)
-            loginUserName.insert(0,username)
-            loginPassword.delete(0,END)
-            loginPassword.insert(0,password)
+            
         else:
             messagebox.showerror( title="Error", message="Password Mismatch")
             signupPassword.delete(0,END)
@@ -1204,10 +1222,10 @@ def delete(result):
 
 
 def searchBookUsers():
-    getExistingBooksUsers()
+    getExistingBooksUsers(userTpeForBooks)
     searchEntryUsers.delete(0,END)
 def searchBook1Users(event):
-    getExistingBooksUsers()
+    getExistingBooksUsers(userTpeForBooks)
     searchEntryUsers.delete(0,END)
 
 
