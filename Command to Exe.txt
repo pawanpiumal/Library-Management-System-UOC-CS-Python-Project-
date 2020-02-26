@@ -1,0 +1,1 @@
+pyinstaller --onefile --hidden-import babel.numbers "Library System (No CMD).pyw"

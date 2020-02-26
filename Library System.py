@@ -4,6 +4,8 @@ import pymysql
 from tkcalendar import DateEntry
 from PIL import ImageTk,Image
 from tkinter import filedialog
+import os
+import shutil
 mainWidth=1000
 mainHeight=640
 main = Tk()
@@ -85,6 +87,38 @@ try:
     db.close()
 except Exception as e:
     print(format(e))
+
+#fixing the images folder
+path = 'images\\'
+
+files = []
+# r=root, d=directories, f = files
+for r, d, f in os.walk(path):
+    for file in f:
+        if '.jpg' in file:
+            files.append(file)
+DBFiles=[]
+db= pymysql.connect("localhost","root","","LibraryDB")
+cursor = db.cursor()
+sql="select * from books"
+try:
+   cursor.execute(sql)
+   results = cursor.fetchall()
+   for result in results:
+       DBFiles.append(result[11])
+except Exception as e:
+    print(format(e))
+db.close()
+differenceFIles=list(set(DBFiles)-set(files))
+print(differenceFIles)
+if(differenceFIles):
+    for file in differenceFIles:
+        shutil.copy('images\\default.jpg', 'images\\'+file)
+
+unWanted=list(set(files)-set(DBFiles))
+for file in unWanted:
+    if(file!='default.jpg'):
+        os.remove('images\\'+file)
 
 #Login & Signup Frame
 
@@ -761,6 +795,7 @@ def deleteBook(result):
                 cursor.execute(sql3)
                 db.commit()
                 addBookClear()
+                os.remove("images\\"+ result[11])
             except Exception as e:
                 print(format(e))
                 db.rollback()
