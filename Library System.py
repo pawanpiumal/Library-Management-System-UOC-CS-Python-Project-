@@ -140,14 +140,16 @@ def enter2(event):
 def leave2(event):
     canvas2.unbind_all("<MouseWheel>")
 
+
 def myfunction2(event):
     canvas2.configure(scrollregion=canvas2.bbox("all"),width=mainWidth-30,height=mainHeight-100)
 
 def mouse_wheel2(event):
-    if event.num==5 or event.delta==-120:
-        canvas2.yview_scroll(1,"units" )
-    if event.num==4 or event.delta ==120:
-        canvas2.yview_scroll(-1,"units" )
+    if canvas2.winfo_height()< bookCol11.winfo_height():
+        if event.num==5 or event.delta==-120:
+            canvas2.yview_scroll(1,"units" )
+        if event.num==4 or event.delta ==120:
+            canvas2.yview_scroll(-1,"units" )
                         
 myframe2=Frame(ussMain,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
 myframe2.place(x=0,y=90)
@@ -416,7 +418,7 @@ def loginClear():
 Label(loginFrame,text="UserName",padx=10).grid(row=0,column=0,sticky=W,pady=10)
 Label(loginFrame,text="Password",padx=10).grid(row=1,column=0,sticky=W,pady=(0,10))
 
-emptyCol = Label(loginFrame,text ="  ").grid(row=0,column=1)
+Label(loginFrame,text ="  ").grid(row=0,column=1)
 
 
 loginUserName = Entry(loginFrame,)
@@ -715,10 +717,11 @@ def myfunction(event):
     canvas.configure(scrollregion=canvas.bbox("all"),width=mainWidth-30,height=mainHeight-100)
 
 def mouse_wheel(event):
-    if event.num==5 or event.delta==-120:
-        canvas.yview_scroll(1,"units" )
-    if event.num==4 or event.delta ==120:
-        canvas.yview_scroll(-1,"units" )
+    if canvas.winfo_height()<bookCol1.winfo_height():
+        if event.num==5 or event.delta==-120:
+            canvas.yview_scroll(1,"units" )
+        if event.num==4 or event.delta ==120:
+            canvas.yview_scroll(-1,"units" )
                         
 myframe=Frame(booksUI,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
 myframe.place(x=0,y=90)
@@ -1032,10 +1035,11 @@ def myfunction1(event):
     canvas1.configure(scrollregion=canvas1.bbox("all"),width=mainWidth-30,height=mainHeight-100)
 
 def mouse_wheel1(event):
-    if event.num==5 or event.delta==-120:
-        canvas1.yview_scroll(1,"units" )
-    if event.num==4 or event.delta ==120:
-        canvas1.yview_scroll(-1,"units" )
+    if canvas1.winfo_height()<frameCol1.winfo_height():
+        if event.num==5 or event.delta==-120:
+            canvas1.yview_scroll(1,"units" )
+        if event.num==4 or event.delta ==120:
+            canvas1.yview_scroll(-1,"units" )
                         
 myframe1=Frame(usersUI,relief=GROOVE,width=mainWidth,height=mainHeight,bd=0)
 myframe1.place(x=0,y=90)
@@ -1153,11 +1157,22 @@ def users():
     getExistingUsersList()
     lsmMain.pack_forget()
 
+def logout():
+    signupClear()
+    loginClear()
+    root.lift()
+    lsmMain.pack_forget()
+    ussMain.pack_forget()
+    root.pack(expand='yes',fill='both')
+    
+    
 
 addNewBookButton = Button(lsmMain, text="Add New Book",font=('ubuntu mono',10),width=35,height=15, command=newBook)
 existingBooksButton = Button(lsmMain, text="Existing Books",font=('ubuntu mono',10),width=35,height=15, command=existingBooks)
 existingUsersButton = Button(lsmMain, text="Users",width=35,font=('ubuntu mono',10),height=15, command = users)
+LogOutButton = Button(lsmMain,text="Logout",command=logout)
 
+LogOutButton.place(relx=0.943,rely=0.01)
 addNewBookButton.place(x=120,rely=0.3)
 existingBooksButton.place(x=385,rely=0.3)
 existingUsersButton.place(x=650,rely=0.3)
@@ -1265,6 +1280,7 @@ def searchBook1Users(event):
 
 
 Label(ussMain, text="Books", font=("TIMES NEW ROMAN",30)).place(x=450, y=10)
+Button(ussMain,text="Logout",command=logout).place(relx=0.934,rely=0.01)
 #Label(ussMain, text="Books", font=("TIMES NEW ROMAN",30)).pack()
 searchEntryUsers = Entry(ussMain)
 searchEntryUsers.place( x=325, y=60,width=300)
