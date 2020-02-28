@@ -248,7 +248,7 @@ def getExistingBooksUsers(userType):
     if not str(searchEntryUsers.get()):
         sql="select * from books where usageAccountType = 'All' or usageAccountType = '"+userType+"'"
     else:
-        sql= "select * from books where title like '%"+str(searchEntryUsers.get())+"%'"
+        sql= "select * from books where title like '%"+str(searchEntryUsers.get())+"%' and (usageAccountType = 'All' or usageAccountType = '"+userType+"')"
       
     try:
         cursor.execute(sql)
@@ -1275,6 +1275,7 @@ def searchBookUsers():
     getExistingBooksUsers(userTpeForBooks)
     searchEntryUsers.delete(0,END)
 def searchBook1Users(event):
+    print(userTpeForBooks)
     getExistingBooksUsers(userTpeForBooks)
     searchEntryUsers.delete(0,END)
 
